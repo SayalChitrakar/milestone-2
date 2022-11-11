@@ -6,4 +6,7 @@ router
     .route("/")
     .get(itemController.getAllCheckout)
 
+router
+    .route("/:id")
+    .post(itemController.checkOut)
 module.exports = router;
