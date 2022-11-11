@@ -162,10 +162,17 @@ exports.addToCart = async(request,response,next)=>{
             "item":itemId
 
         }
-        const isItem = await Item.findOne({name:data.name});
+        const isItem = await Item.findById(itemId);
         if(!isItem){
             return(next(new Error("no such item found")));
         }
+        const existingQuantity = isItem.quantity;
+        const finalQuantity = existingQuantity-data.quantity;
+
+        if(finalQuantity<0){
+            return(next(new Error("too many item, reduce the quantity")));
+        }
+        await Item.findByIdAndUpdate(itemId,{quantity:finalQuantity},{new:true});
         const cart = await Cart.create(finalData);
 
         response
@@ -177,5 +184,60 @@ exports.addToCart = async(request,response,next)=>{
     }
     catch(error){
         console.log("error while adding to cart");
+    }
+}
+
+exports.checkOut = async(request,response,next)=>{
+
+    console.log("running");
+    try{
+        const itemId = request.params.id;
+        const data = request.body;
+        const finalData = {
+            "name":data.name,
+            "email":data.email,
+            "address":data.address,
+            "quantity":data.quantity,
+            "item":itemId
+
+        }
+        const isItem = await Item.findById(itemId);
+        if(!isItem){
+            return(next(new Error("no such item found")));
+        }
+        const existingQuantity = isItem.quantity;
+        const finalQuantity = existingQuantity-data.quantity;
+
+        if(finalQuantity<0){
+            return(next(new Error("too many item, reduce the quantity")));
+        }
+        await Item.findByIdAndUpdate(itemId,{quantity:finalQuantity},{new:true});
+        const checkOut = await Checkout.create(finalData);
+
+        response
+            .status(200)
+            .json({
+                status:"success",
+                data:checkOut
+            })
+    }
+    catch(error){
+        console.log("error while checking out item");
+    }
+}
+exports.getAllOrders = async(request,response)=>{
+
+
+    try{
+        const checkout = await Checkout.find().populate('item');
+        response
+            .status(200)
+            .json({
+                status:"success",
+                data:checkout
+            })
+    }
+    catch(error){
+        console.log('error while viewing checkouts');
     }
 }
