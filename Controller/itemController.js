@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
+
 const Item =require('./../Model/itemModel');
+const Cart = require('./../Model/cartModel');
+const Checkout= require('./../Model/checkOutModel');
 
 exports.getAllItem = async(request,response)=>{
 
@@ -91,5 +94,88 @@ exports.updateItem = async(request,response)=>{
     catch(error){
 
         console.log(error);
+    }
+}
+
+exports.addToCard = async (request,response)=>{
+
+    try{
+        const data = request.body;
+
+
+
+    }
+    catch(error){
+
+        console.log("error while adding to cart");
+    }
+
+
+}
+
+exports.getAllCart = async (request,response,next)=>{
+
+    try{
+
+        const cart = await Cart.find();
+        response
+            .status(200)
+            .json({
+                message:"success",
+                data:cart
+            })
+    }
+    catch(error){
+        console.log("error in getting all carts");
+    }
+}
+
+
+exports.getAllCheckout = async(request,response,next)=>{
+
+    try{
+
+        const cart = await Checkout.find();
+        response
+            .status(200)
+            .json({
+                message:"success",
+                data:cart
+            })
+    }
+    catch(error){
+        console.log("error in getting all carts");
+    }
+}
+
+exports.addToCart = async(request,response,next)=>{
+
+    console.log("running");
+    try{
+        const itemId = request.params.id;
+        const data = request.body;
+        const finalData = {
+            "name":data.name,
+            "email":data.email,
+            "address":data.address,
+            "quantity":data.quantity,
+            "item":itemId
+
+        }
+        const isItem = await Item.findOne({name:data.name});
+        if(!isItem){
+            return(next(new Error("no such item found")));
+        }
+        const cart = await Cart.create(finalData);
+
+        response
+            .status(200)
+            .json({
+                status:"success",
+                data:cart
+            })
+    }
+    catch(error){
+        console.log("error while adding to cart");
     }
 }
