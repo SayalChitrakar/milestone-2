@@ -2,12 +2,14 @@ const mongoose = require("mongoose");
 
 const checkOutSchema = new mongoose.Schema({
 
-    item:String,
-    quantity:Number,
-    user:{
+    name :String,
+    email :String,
+    address:String,
+    item: {
         type:mongoose.Schema.ObjectId,
-        ref:'User'
-    }
+        ref:'Item'
+    },
+    quantity:Number
 
 })
 
