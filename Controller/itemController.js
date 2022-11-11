@@ -229,7 +229,7 @@ exports.getAllOrders = async(request,response)=>{
 
 
     try{
-        const checkout = await Checkout.find().populate('item');
+        const checkout = await Checkout.find().populate('item').select("name");
         response
             .status(200)
             .json({
