@@ -1,0 +1,11 @@
+{
+  "name": "interntest-milestone-2",
+  "version": "1.0.0",
+  "description": "this is milestone 2 of intern test",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sayal Chitrakar",
+  "license": "ISC"
+}
